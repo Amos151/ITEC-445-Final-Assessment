@@ -27,7 +27,7 @@ router.get("/:name", async (req, res) => {
   }
 });
 
-// PUT → increment upvotes
+// PUT increment upvotes
 router.put("/:name/upvotes", async (req, res) => {
   try {
     const article = await Article.findOneAndUpdate(
@@ -43,7 +43,7 @@ router.put("/:name/upvotes", async (req, res) => {
   }
 });
 
-// POST → create a new article
+// POST  create a new article
 router.post("/", async (req, res) => {
   try {
     const { name, title, content, author } = req.body;
@@ -56,7 +56,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// DELETE → remove an article
+// DELETE  remove an article
 router.delete("/:name", async (req, res) => {
   try {
     const result = await Article.findOneAndDelete({ name: req.params.name });

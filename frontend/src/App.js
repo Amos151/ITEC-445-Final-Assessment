@@ -11,7 +11,6 @@ function App() {
   const [user, setUser]     = useState(null);
   const [isChecking, setIsChecking] = useState(true);
 
-  // On mount, ask the backend who's logged in
   useEffect(() => {
     axios.get(`${API_URL}/auth/user`, { withCredentials: true })
       .then(res => setUser(res.data.user))
@@ -19,7 +18,6 @@ function App() {
       .finally(() => setIsChecking(false));
   }, []);
 
-  // Optional: show a loader while we check auth status
   if (isChecking) {
     return <div>Loading authentication…</div>;
   }

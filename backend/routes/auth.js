@@ -3,13 +3,13 @@ import passport from "passport";
 
 const router = Router();
 
-// 1) Kick off Google login
+// Kick off Google login
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-// 2) Handle callback
+// Handle callback
 router.get(
   "/google/callback",
   passport.authenticate("google", {
@@ -21,7 +21,7 @@ router.get(
   }
 );
 
-// 3) Logout
+// Logout
 router.get("/logout", (req, res, next) => {
   req.logout(err => {
     if (err) return next(err);
@@ -30,7 +30,7 @@ router.get("/logout", (req, res, next) => {
   });
 });
 
-// 4) Get current user
+// Get current user
 router.get("/user", (req, res) => {
   if (!req.isAuthenticated()) return res.status(401).json({ user: null });
   const { displayName, email, photo } = req.user;

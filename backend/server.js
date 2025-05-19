@@ -22,7 +22,7 @@ app.use(cors({
 })); // Enable CORS for all routes
 
 
-// 1) Sessions
+//  Sessions
 app.use(session({
   secret:            process.env.SESSION_SECRET,
   resave:            false,
@@ -34,11 +34,11 @@ app.use(session({
   }
 }));
 
-// 2) Passport middleware
+// Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
-// 3) Body parser & CORS
+//  Body parser & CORS
 app.use(express.json());
 app.use(cors({
   origin:       process.env.CLIENT_URL,
