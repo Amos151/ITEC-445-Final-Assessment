@@ -1,0 +1,48 @@
+name: "CI on Dev (Test + Auto PR)"
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Backend Tests
+        working-directory: backend
+        run: |
+          npm install
+          npm test
+
+      - name: Frontend Tests
+        working-directory: frontend
+        run: |
+          npm install
+          npm test -- --watchAll=false
+
+  create-pr:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create PR
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "dev"
+          destination_branch: "main"
+          pr_title: "Auto PR: dev → main"
+          pr_body: "This PR was auto-generated after tests passed."
+          github_token: ${{ secrets.GITHUB_TOKEN }}

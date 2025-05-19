@@ -1,0 +1,37 @@
+name: CI on Main (Test + Deploy to Render)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Backend Tests
+        working-directory: backend
+        run: |
+          npm install
+          npm test
+
+      - name: Frontend Tests
+        working-directory: frontend
+        run: |
+          npm install
+          npm test -- --watchAll=false
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Done! Rely on Render's GitHub auto-deploy
+        run: echo "Code pushed to main. Render will auto-deploy both services."
