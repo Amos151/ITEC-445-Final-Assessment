@@ -1,13 +1,37 @@
 import "./App.css";
 import AllRoutes from "./AllRoutes";
 import NavBar from "./components/Navbar";
+import React, { createContext, useState, useEffect } from "react";
+import axios from "axios";
+
+export const AuthContext = createContext();
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 function App() {
+  const [user, setUser]     = useState(null);
+  const [isChecking, setIsChecking] = useState(true);
+
+  // On mount, ask the backend who's logged in
+  useEffect(() => {
+    axios.get(`${API_URL}/auth/user`, { withCredentials: true })
+      .then(res => setUser(res.data.user))
+      .catch(() => setUser(null))
+      .finally(() => setIsChecking(false));
+  }, []);
+
+  // Optional: show a loader while we check auth status
+  if (isChecking) {
+    return <div>Loading authentication…</div>;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">Blog Central!</header>
-      <NavBar />
-      <AllRoutes />
-    </div>
+    <AuthContext.Provider value={{ user, setUser }}>
+      <div className="App">
+        <header className="App-header">Blog Central!</header>
+        <NavBar />
+        <AllRoutes />
+      </div>
+    </AuthContext.Provider>
   );
 }
 
