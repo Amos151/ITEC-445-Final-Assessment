@@ -5,9 +5,6 @@ const router = Router();
 
 
 
-
-
-
 // GET all articles
 router.get("/", async (req, res) => {
   try {
