@@ -4,7 +4,6 @@ import Article from "../models/Article.js";
 const router = Router();
 
 
-
 // GET all articles
 router.get("/", async (req, res) => {
   try {
@@ -66,6 +65,22 @@ router.delete("/:name", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error deleting article" });
+  }
+});
+
+function ensureAuth(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  res.status(401).json({ error: "Unauthorized" });
+}
+
+router.post("/", ensureAuth, async (req, res) => {
+  try {
+    const { name, title, content, author } = req.body;
+    const newArticle = new Article({ name, title, content, author });
+    await newArticle.save();
+    res.status(201).json(newArticle);
+  } catch (err) {
+    res.status(400).json({ error: "Bad request creating article" });
   }
 });
 
